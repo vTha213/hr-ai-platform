@@ -3,11 +3,22 @@ from sqlalchemy.ext.asyncio import (
     AsyncSession,
     async_sessionmaker,
 )
+from sqlalchemy.engine import make_url
 
 from app.core.config import settings
 
+url = make_url(settings.DATABASE_URL)
+
+query = dict(url.query)
+
+if "sslmode" in query:
+    query.pop("sslmode")
+    query["ssl"] = "require"
+
+url = url.set(query=query)
+
 engine = create_async_engine(
-    settings.DATABASE_URL,
+    url,
     echo=False,
     pool_pre_ping=True,
 )
