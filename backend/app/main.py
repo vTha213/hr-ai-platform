@@ -65,3 +65,11 @@ app.include_router(candidate_router)
 app.include_router(screening_router)
 app.include_router(dashboard_router)
 app.include_router(social_media_router)
+
+import os
+
+@app.get("/debug-db")
+async def debug_db():
+    return {
+        "database_url": os.getenv("DATABASE_URL"),
+    }
