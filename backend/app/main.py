@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 
 from app.db.database import engine
@@ -15,7 +16,17 @@ from app.api.social_media import router as social_media_router
 
 app = FastAPI(
     title="HR AI Platform",
-    version="1.0.0"
+    version="1.0.0",
+    description="AI Powered Recruitment Platform"
+)
+
+# CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Change to frontend URL in production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
