@@ -45,7 +45,7 @@ const handleCreateJob = async () => {
     await createJob(form);
 
     alert("Job created successfully");
-    ...
+
     setShowModal(false);
 
     setForm({
