@@ -23,22 +23,49 @@ export default function JobsPage() {
     description: "",
   });
 
-  useEffect(() => {
-    loadJobs();
-  }, []);
+useEffect(() => {
+  loadJobs();
+}, []);
 
-  const loadJobs = async () => {
-    try {
-      const data = await getJobs();
-      setJobs(data);
-    } catch (error) {
-      console.error("Failed to load jobs", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+const loadJobs = async () => {
+  try {
+    const data = await getJobs();
+    setJobs(data);
+  } catch (error) {
+    console.error("Failed to load jobs", error);
+  } finally {
+    setLoading(false);
+  }
+};
 
-  return (
+const handleCreateJob = async () => {
+  alert("CLICKED");
+
+  try {
+    await createJob(form);
+
+    alert("Job created successfully");
+    ...
+    setShowModal(false);
+
+    setForm({
+      title: "",
+      department: "",
+      location: "",
+      employment_type: "",
+      experience: "",
+      skills: "",
+      description: "",
+    });
+
+    await loadJobs();
+  } catch (err) {
+    console.error(err);
+    alert("Failed to create job");
+  }
+};
+
+return ( (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
@@ -216,14 +243,14 @@ export default function JobsPage() {
 
             <div className="flex justify-end gap-3">
               <button
-                onClick={() => setShowModal(false)}
-                className="rounded bg-gray-300 px-4 py-2"
-              >
-                Cancel
-              </button>
+  onClick={() => setShowModal(false)}
+  className="rounded bg-gray-300 px-4 py-2"
+>
+  Cancel
+</button>
 
               <button
-                onClick={() => setShowModal(false)}
+                onClick={handleCreateJob}
                 className="rounded bg-blue-600 px-4 py-2 text-white"
               >
                 Save
