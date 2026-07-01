@@ -1,11 +1,27 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getJobs, Job } from "@/services/jobs";
+import {
+  getJobs,
+  createJob,
+  Job,
+} from "@/services/jobs";
 
 export default function JobsPage() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const [showModal, setShowModal] = useState(false);
+
+  const [form, setForm] = useState({
+    title: "",
+    department: "",
+    location: "",
+    employment_type: "",
+    experience: "",
+    skills: "",
+    description: "",
+  });
 
   useEffect(() => {
     loadJobs();
@@ -24,7 +40,6 @@ export default function JobsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">
@@ -36,26 +51,26 @@ export default function JobsPage() {
           </p>
         </div>
 
-        <button className="rounded-lg bg-blue-600 px-5 py-2 font-semibold text-white hover:bg-blue-700">
+        <button
+          onClick={() => setShowModal(true)}
+          className="rounded-lg bg-blue-600 px-5 py-2 font-semibold text-white hover:bg-blue-700"
+        >
           + Create Job
         </button>
       </div>
 
-      {/* Loading */}
       {loading && (
         <div className="rounded-xl bg-white p-8 text-center shadow">
           Loading Jobs...
         </div>
       )}
 
-      {/* Empty */}
       {!loading && jobs.length === 0 && (
         <div className="rounded-xl bg-white p-8 text-center shadow">
           No Jobs Found
         </div>
       )}
 
-      {/* Jobs Table */}
       {!loading && jobs.length > 0 && (
         <div className="overflow-hidden rounded-xl bg-white shadow">
           <table className="w-full">
@@ -105,6 +120,116 @@ export default function JobsPage() {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="w-full max-w-xl rounded-xl bg-white p-6 shadow-xl">
+            <h2 className="mb-5 text-2xl font-bold">
+              Create Job
+            </h2>
+
+            <input
+              className="mb-3 w-full rounded border p-3"
+              placeholder="Job Title"
+              value={form.title}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  title: e.target.value,
+                })
+              }
+            />
+
+            <input
+              className="mb-3 w-full rounded border p-3"
+              placeholder="Department"
+              value={form.department}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  department: e.target.value,
+                })
+              }
+            />
+
+            <input
+              className="mb-3 w-full rounded border p-3"
+              placeholder="Location"
+              value={form.location}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  location: e.target.value,
+                })
+              }
+            />
+
+            <input
+              className="mb-3 w-full rounded border p-3"
+              placeholder="Employment Type"
+              value={form.employment_type}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  employment_type: e.target.value,
+                })
+              }
+            />
+
+            <input
+              className="mb-3 w-full rounded border p-3"
+              placeholder="Experience"
+              value={form.experience}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  experience: e.target.value,
+                })
+              }
+            />
+
+            <textarea
+              className="mb-3 w-full rounded border p-3"
+              placeholder="Skills"
+              value={form.skills}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  skills: e.target.value,
+                })
+              }
+            />
+
+            <textarea
+              className="mb-5 w-full rounded border p-3"
+              placeholder="Description"
+              value={form.description}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  description: e.target.value,
+                })
+              }
+            />
+
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowModal(false)}
+                className="rounded bg-gray-300 px-4 py-2"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={() => setShowModal(false)}
+                className="rounded bg-blue-600 px-4 py-2 text-white"
+              >
+                Save
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
