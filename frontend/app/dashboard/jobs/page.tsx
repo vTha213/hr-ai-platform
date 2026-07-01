@@ -23,50 +23,51 @@ export default function JobsPage() {
     description: "",
   });
 
-useEffect(() => {
-  loadJobs();
-}, []);
+  useEffect(() => {
+    loadJobs();
+  }, []);
 
-const loadJobs = async () => {
-  try {
-    const data = await getJobs();
-    setJobs(data);
-  } catch (error) {
-    console.error("Failed to load jobs", error);
-  } finally {
-    setLoading(false);
-  }
-};
+  const loadJobs = async () => {
+    try {
+      const data = await getJobs();
+      setJobs(data);
+    } catch (error) {
+      console.error("Failed to load jobs", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-const handleCreateJob = async () => {
-  alert("CLICKED");
+  const handleCreateJob = async () => {
+    try {
+      const newJob = await createJob(form);
 
-  try {
-    await createJob(form);
+      setJobs((prev) => [...prev, newJob]);
 
-    alert("Job created successfully");
+      setShowModal(false);
 
-    setShowModal(false);
+      setForm({
+        title: "",
+        department: "",
+        location: "",
+        employment_type: "",
+        experience: "",
+        skills: "",
+        description: "",
+      });
 
-    setForm({
-      title: "",
-      department: "",
-      location: "",
-      employment_type: "",
-      experience: "",
-      skills: "",
-      description: "",
-    });
+      alert("Job created successfully");
+    } catch (error) {
+      console.error(error);
+      alert("Failed to create job");
+    }
+  };
 
-    await loadJobs();
-  } catch (err) {
-    console.error(err);
-    alert("Failed to create job");
-  }
-};
+  return (
+          <div className="space-y-6">
 
-return ( (
-    <div className="space-y-6">
+      {/* Header */}
+
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">
@@ -86,11 +87,15 @@ return ( (
         </button>
       </div>
 
+      {/* Loading */}
+
       {loading && (
         <div className="rounded-xl bg-white p-8 text-center shadow">
           Loading Jobs...
         </div>
       )}
+
+      {/* Empty State */}
 
       {!loading && jobs.length === 0 && (
         <div className="rounded-xl bg-white p-8 text-center shadow">
@@ -98,9 +103,13 @@ return ( (
         </div>
       )}
 
+      {/* Jobs Table */}
+
       {!loading && jobs.length > 0 && (
         <div className="overflow-hidden rounded-xl bg-white shadow">
+
           <table className="w-full">
+
             <thead className="bg-gray-100">
               <tr>
                 <th className="p-4 text-left">Title</th>
@@ -113,11 +122,14 @@ return ( (
             </thead>
 
             <tbody>
+
               {jobs.map((job) => (
+
                 <tr
                   key={job.id}
                   className="border-t hover:bg-gray-50"
                 >
+
                   <td className="p-4 font-semibold">
                     {job.title}
                   </td>
@@ -131,6 +143,7 @@ return ( (
                   <td>{job.experience}</td>
 
                   <td>
+
                     <span
                       className={`rounded px-3 py-1 text-sm font-medium ${
                         job.approved
@@ -142,22 +155,32 @@ return ( (
                         ? "Approved"
                         : "Pending"}
                     </span>
+
                   </td>
+
                 </tr>
+
               ))}
+
             </tbody>
+
           </table>
+
         </div>
       )}
 
+      {/* Create Job Modal */}
+
       {showModal && (
+
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+
           <div className="w-full max-w-xl rounded-xl bg-white p-6 shadow-xl">
+
             <h2 className="mb-5 text-2xl font-bold">
               Create Job
             </h2>
-
-            <input
+                        <input
               className="mb-3 w-full rounded border p-3"
               placeholder="Job Title"
               value={form.title}
@@ -242,23 +265,31 @@ return ( (
             />
 
             <div className="flex justify-end gap-3">
+
               <button
-  onClick={() => setShowModal(false)}
-  className="rounded bg-gray-300 px-4 py-2"
->
-  Cancel
-</button>
+                onClick={() => setShowModal(false)}
+                className="rounded bg-gray-300 px-4 py-2"
+              >
+                Cancel
+              </button>
 
               <button
                 onClick={handleCreateJob}
-                className="rounded bg-blue-600 px-4 py-2 text-white"
+                className="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
               >
                 Save
               </button>
+
             </div>
+
           </div>
+
         </div>
+
       )}
+
     </div>
+
   );
+
 }
